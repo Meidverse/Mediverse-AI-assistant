@@ -1,5 +1,8 @@
 # Vercel Ignore - Files to exclude from deployment
 
+# Old frontend folder (files moved to root)
+frontend/
+
 # Python
 __pycache__/
 *.py[cod]
@@ -29,17 +32,7 @@ htmlcov/
 !VERCEL_DEPLOYMENT.md
 
 # Backend files not needed for serverless
-backend/deploy.sh
-backend/docker-compose.yml
-backend/Dockerfile
-backend/nginx.conf
-backend/ssl/
-backend/tests/
-backend/scripts/
-
-# Node modules in backend (if any)
-backend/node_modules/
-backend/package-lock.json
+backend/
 
 # Git
 .git/
@@ -49,4 +42,3 @@ backend/package-lock.json
 .env
 .env.local
 .env.production
-backend/.env
