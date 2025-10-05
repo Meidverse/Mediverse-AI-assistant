@@ -1,0 +1,30 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.env
+.env.*
+backend/.env
+backend/.env.*
+frontend/.env.local
+frontend/.env.local.*
+
+# Frontend dependencies and build (old location)
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Root-level Next.js (new structure)
+node_modules/
+.next/
+out/
+build/
+package-lock.json
+
+.idea/
+.vscode/
+.DS_Store
+pytest_cache/
+.cache/
+ssl/*
+!ssl/.gitkeep
