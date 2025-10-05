@@ -1,0 +1,52 @@
+# Vercel Ignore - Files to exclude from deployment
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentation (optional - remove if you want docs deployed)
+*.md
+!README.md
+!VERCEL_DEPLOYMENT.md
+
+# Backend files not needed for serverless
+backend/deploy.sh
+backend/docker-compose.yml
+backend/Dockerfile
+backend/nginx.conf
+backend/ssl/
+backend/tests/
+backend/scripts/
+
+# Node modules in backend (if any)
+backend/node_modules/
+backend/package-lock.json
+
+# Git
+.git/
+.gitignore
+
+# Environment files (use Vercel env vars instead)
+.env
+.env.local
+.env.production
+backend/.env
