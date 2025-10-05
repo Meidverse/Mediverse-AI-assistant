@@ -11,8 +11,8 @@ backend_path = Path(__file__).parent.parent / "backend"
 sys.path.insert(0, str(backend_path))
 
 # Set environment defaults for serverless (optional dependencies)
-os.environ.setdefault("DATABASE_URL", "postgresql://postgres:nIKSHAY@1212@db.qdhyixgysckfiwopwbif.supabase.co:5432/postgres?sslmode=require")
-os.environ.setdefault("REDIS_URL", "redis://default:NlhoveX5lX9bVWP11REM3jX64m0f8wxu@redis-17423.c305.ap-south-1-1.ec2.redns.redis-cloud.com:17423")
+os.environ.setdefault("DATABASE_URL", "sqlite:///./test.db")
+os.environ.setdefault("REDIS_URL", "redis://localhost:6379")
 os.environ.setdefault("TAVILY_API_KEY", "")  # Optional for some modes
 
 from app.main import app
