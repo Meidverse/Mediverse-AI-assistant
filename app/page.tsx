@@ -405,7 +405,7 @@ export default function HomePage() {
               <Link href="#" className="hover:text-white transition">Terms</Link>
               <Link href="#" className="hover:text-white transition">Contact</Link>
             </div>
-            <p className="text-xs text-slate-500">© {new Date().getFullYear()} Mediverse. All rights reserved.</p>
+            <p className="text-xs text-slate-500" suppressHydrationWarning>© {new Date().getFullYear()} Mediverse. All rights reserved.</p>
           </div>
         </div>
       </footer>

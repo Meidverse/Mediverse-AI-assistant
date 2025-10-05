@@ -10,13 +10,19 @@ from pathlib import Path
 backend_path = Path(__file__).parent.parent / "backend"
 sys.path.insert(0, str(backend_path))
 
+# Set environment defaults for serverless (optional dependencies)
+os.environ.setdefault("DATABASE_URL", "sqlite:///./test.db")
+os.environ.setdefault("REDIS_URL", "redis://localhost:6379")
+os.environ.setdefault("TAVILY_API_KEY", "")  # Optional for some modes
+
 from app.main import app
 from mangum import Mangum
 
-# Mangum adapter for AWS Lambda/Vercel serverless
+# Vercel will call the 'handler' function
+# Mangum wraps FastAPI to work with serverless
 handler = Mangum(app, lifespan="off")
 
-# For direct invocation
+# For direct invocation (local testing)
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

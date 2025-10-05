@@ -25,7 +25,17 @@ interface Message {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
 
+// Custom hook to prevent hydration mismatch for timestamps
+function useHydrated() {
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
+  return hydrated;
+}
+
 export function ChatInterface() {
+  const hydrated = useHydrated();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
@@ -357,8 +367,8 @@ export function ChatInterface() {
                   </div>
                 )}
                 
-                <p className="mt-2 text-xs text-slate-500">
-                  {message.timestamp.toLocaleTimeString([], {
+                <p className="mt-2 text-xs text-slate-500" suppressHydrationWarning>
+                  {hydrated && message.timestamp.toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
                   })}
