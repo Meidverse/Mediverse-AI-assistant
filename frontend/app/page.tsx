@@ -163,7 +163,7 @@ export default function HomePage() {
 
                 <p className="text-lg text-slate-300 leading-relaxed">
                   Harness the power of advanced AI to analyze X-rays, CT scans, and MRIs instantly. 
-                  Get preliminary diagnostic insights in seconds with Mediverse's multimodal vision AI.
+                  Get preliminary diagnostic insights in seconds with Mediverse&apos;s multimodal vision AI.
                 </p>
 
                 <div className="flex flex-wrap gap-4">
