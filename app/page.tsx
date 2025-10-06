@@ -10,7 +10,25 @@ import {
     ShieldCheckIcon,
     SparklesIcon
 } from "@heroicons/react/24/outline";
+
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+
+function useTheme() {
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (document.documentElement.classList.contains('light')) setTheme('light');
+      else setTheme('dark');
+      const observer = new MutationObserver(() => {
+        setTheme(document.documentElement.classList.contains('light') ? 'light' : 'dark');
+      });
+      observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+      return () => observer.disconnect();
+    }
+  }, []);
+  return theme;
+}
 
 const capabilities = [
   {
@@ -55,6 +73,7 @@ const stats = [
 ];
 
 export default function HomePage() {
+  const theme = useTheme();
   const scrollToDemo = () => {
     const demoSection = document.getElementById('demo');
     if (demoSection) {
@@ -63,25 +82,36 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen dark:bg-slate-950 light:bg-gray-50 dark:text-slate-100 light:text-gray-900 transition-colors">
-      {/* Background effects */}
+    <div className={`min-h-screen transition-colors ${theme === 'dark' ? 'dark:bg-slate-950 dark:text-slate-100' : 'light:bg-gray-50 light:text-gray-900'}`}>
+      {/* Background effects - different for each theme */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
-        <motion.div
-          className="absolute -top-32 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-gradient-to-r from-blue-600/40 via-purple-600/40 to-indigo-500/30 blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-        <motion.div
-          className="absolute bottom-0 right-0 h-96 w-96 translate-x-1/2 bg-gradient-to-br from-sky-400/20 via-blue-500/30 to-transparent blur-3xl"
-          animate={{
-            scale: [1, 1.1, 1],
-            opacity: [0.2, 0.4, 0.2],
-          }}
-          transition={{ duration: 10, repeat: Infinity, delay: 1 }}
-        />
+        {theme === 'dark' ? (
+          <>
+            <motion.div
+              className="absolute -top-32 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-gradient-to-r from-blue-600/40 via-purple-600/40 to-indigo-500/30 blur-3xl"
+              animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+              transition={{ duration: 8, repeat: Infinity }}
+            />
+            <motion.div
+              className="absolute bottom-0 right-0 h-96 w-96 translate-x-1/2 bg-gradient-to-br from-sky-400/20 via-blue-500/30 to-transparent blur-3xl"
+              animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
+              transition={{ duration: 10, repeat: Infinity, delay: 1 }}
+            />
+          </>
+        ) : (
+          <>
+            <motion.div
+              className="absolute -top-32 left-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-gradient-to-r from-yellow-200/40 via-pink-200/40 to-blue-200/30 blur-3xl"
+              animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.4, 0.2] }}
+              transition={{ duration: 8, repeat: Infinity }}
+            />
+            <motion.div
+              className="absolute bottom-0 right-0 h-96 w-96 translate-x-1/2 bg-gradient-to-br from-pink-200/20 via-yellow-200/30 to-transparent blur-3xl"
+              animate={{ scale: [1, 1.05, 1], opacity: [0.1, 0.3, 0.1] }}
+              transition={{ duration: 10, repeat: Infinity, delay: 1 }}
+            />
+          </>
+        )}
       </div>
 
       {/* Header */}
@@ -135,101 +165,199 @@ export default function HomePage() {
       </motion.header>
 
       <main>
-        {/* Hero Section */}
+        {/* Hero Section - different UI for light/dark themes */}
         <section className="section pt-20 pb-32">
           <div className="mx-auto max-w-7xl px-6">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <motion.div
-                className="space-y-8"
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-              >
-                <motion.div
-                  className="inline-flex items-center gap-2 rounded-full border dark:border-white/10 light:border-blue-300 dark:bg-white/5 light:bg-blue-50 px-3 py-1 text-xs uppercase tracking-widest dark:text-blue-200 light:text-blue-700 shadow-glow-sm"
-                  whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(59, 130, 246, 0.4)" }}
-                >
-                  <SparklesIcon className="h-4 w-4 dark:text-blue-300 light:text-blue-600" />
-                  AI-Powered Medical Imaging
-                </motion.div>
-
-                <h1 className="text-5xl font-bold leading-tight lg:text-6xl dark:bg-gradient-to-r dark:from-white dark:via-blue-100 dark:to-purple-200 light:bg-gradient-to-r light:from-gray-900 light:via-blue-900 light:to-purple-900 bg-clip-text text-transparent">
-                  Upload. Analyze. Diagnose.
-                </h1>
-
-                <p className="text-lg dark:text-slate-300 light:text-gray-600 leading-relaxed">
-                  Harness the power of advanced AI to analyze X-rays, CT scans, and MRIs instantly. 
-                  Get preliminary diagnostic insights in seconds with Mediverse&apos;s multimodal vision AI.
-                </p>
-
-                <div className="flex flex-wrap gap-4">
-                  <motion.a
-                    href="#demo"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="primary inline-flex items-center gap-2"
+              {theme === 'dark' ? (
+                <>
+                  <motion.div
+                    className="space-y-8"
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8 }}
                   >
-                    Try Live Demo
-                    <SparklesIcon className="h-5 w-5" />
-                  </motion.a>
-                  <motion.a
-                    href="#features"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="secondary inline-flex items-center gap-2"
-                  >
-                    Learn More
-                  </motion.a>
-                </div>
-
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 pt-8">
-                  {stats.map((stat, idx) => (
                     <motion.div
-                      key={stat.label}
-                      className="text-center"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.5 + idx * 0.1 }}
+                      className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-widest text-blue-200 shadow-glow-sm"
+                      whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(59, 130, 246, 0.4)" }}
                     >
-                      <p className="text-3xl font-bold dark:bg-gradient-to-r dark:from-blue-200 dark:to-purple-200 light:bg-gradient-to-r light:from-blue-700 light:to-purple-700 bg-clip-text text-transparent">
-                        {stat.value}
-                      </p>
-                      <p className="text-xs dark:text-slate-400 light:text-gray-600 mt-1">{stat.label}</p>
+                      <SparklesIcon className="h-4 w-4 text-blue-300" />
+                      AI-Powered Medical Imaging
                     </motion.div>
-                  ))}
-                </div>
-              </motion.div>
 
-              {/* Hero Image/Demo Preview */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9, x: 50 }}
-                animate={{ opacity: 1, scale: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="relative"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl blur-3xl" />
-                <div className="relative card p-6 shadow-glow-xl">
-                  <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 flex items-center justify-center overflow-hidden">
-                    <img
-                      src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=800&q=80"
-                      alt="Medical imaging AI analysis"
-                      className="w-full h-full object-cover opacity-80"
-                    />
-                  </div>
-                  <div className="mt-4 flex items-center gap-3">
-                    <div className="flex-1 h-2 rounded-full dark:bg-slate-800/60 light:bg-gray-200 overflow-hidden">
-                      <motion.div
-                        className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
-                        initial={{ width: "0%" }}
-                        animate={{ width: "95%" }}
-                        transition={{ duration: 2, delay: 1 }}
-                      />
+                    <h1 className="text-5xl font-bold leading-tight lg:text-6xl bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
+                      Upload. Analyze. Diagnose.
+                    </h1>
+
+                    <p className="text-lg text-slate-300 leading-relaxed">
+                      Harness the power of advanced AI to analyze X-rays, CT scans, and MRIs instantly. 
+                      Get preliminary diagnostic insights in seconds with Mediverse&apos;s multimodal vision AI.
+                    </p>
+
+                    <div className="flex flex-wrap gap-4">
+                      <motion.a
+                        href="#demo"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="primary inline-flex items-center gap-2"
+                      >
+                        Try Live Demo
+                        <SparklesIcon className="h-5 w-5" />
+                      </motion.a>
+                      <motion.a
+                        href="#features"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="secondary inline-flex items-center gap-2"
+                      >
+                        Learn More
+                      </motion.a>
                     </div>
-                    <span className="text-xs dark:text-slate-400 light:text-gray-600">95% Confidence</span>
-                  </div>
-                </div>
-              </motion.div>
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-3 gap-4 pt-8">
+                      {stats.map((stat, idx) => (
+                        <motion.div
+                          key={stat.label}
+                          className="text-center"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.5 + idx * 0.1 }}
+                        >
+                          <p className="text-3xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
+                            {stat.value}
+                          </p>
+                          <p className="text-xs text-slate-400 mt-1">{stat.label}</p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+
+                  {/* Hero Image/Demo Preview */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9, x: 50 }}
+                    animate={{ opacity: 1, scale: 1, x: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    className="relative"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-3xl blur-3xl" />
+                    <div className="relative card p-6 shadow-glow-xl">
+                      <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-slate-800/60 to-slate-900/60 border border-white/10 flex items-center justify-center overflow-hidden">
+                        <img
+                          src="https://images.unsplash.com/photo-1559757175-0eb30cd8c063?auto=format&fit=crop&w=800&q=80"
+                          alt="Medical imaging AI analysis"
+                          className="w-full h-full object-cover opacity-80"
+                        />
+                      </div>
+                      <div className="mt-4 flex items-center gap-3">
+                        <div className="flex-1 h-2 rounded-full bg-slate-800/60 overflow-hidden">
+                          <motion.div
+                            className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
+                            initial={{ width: "0%" }}
+                            animate={{ width: "95%" }}
+                            transition={{ duration: 2, delay: 1 }}
+                          />
+                        </div>
+                        <span className="text-xs text-slate-400">95% Confidence</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                </>
+              ) : (
+                <>
+                  <motion.div
+                    className="space-y-8"
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8 }}
+                  >
+                    <motion.div
+                      className="inline-flex items-center gap-2 rounded-full border border-blue-300 bg-blue-50 px-3 py-1 text-xs uppercase tracking-widest text-blue-700 shadow-glow-sm"
+                      whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(59, 130, 246, 0.4)" }}
+                    >
+                      <SparklesIcon className="h-4 w-4 text-blue-600" />
+                      AI Medical Imaging (Light)
+                    </motion.div>
+
+                    <h1 className="text-5xl font-bold leading-tight lg:text-6xl bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
+                      Upload. Analyze. Diagnose.
+                    </h1>
+
+                    <p className="text-lg text-gray-600 leading-relaxed">
+                      Welcome to Mediverse AI! Analyze X-rays, CT scans, and MRIs instantly with a fresh, bright interface. 
+                      Get instant diagnostic insights in seconds with our multimodal vision AI.
+                    </p>
+
+                    <div className="flex flex-wrap gap-4">
+                      <motion.a
+                        href="#demo"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="primary inline-flex items-center gap-2"
+                      >
+                        Try Live Demo
+                        <SparklesIcon className="h-5 w-5 text-blue-600" />
+                      </motion.a>
+                      <motion.a
+                        href="#features"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="secondary inline-flex items-center gap-2"
+                      >
+                        Learn More
+                      </motion.a>
+                    </div>
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-3 gap-4 pt-8">
+                      {stats.map((stat, idx) => (
+                        <motion.div
+                          key={stat.label}
+                          className="text-center"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.5 + idx * 0.1 }}
+                        >
+                          <p className="text-3xl font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent">
+                            {stat.value}
+                          </p>
+                          <p className="text-xs text-gray-600 mt-1">{stat.label}</p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </motion.div>
+
+                  {/* Hero Image/Demo Preview - different image for light theme */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9, x: 50 }}
+                    animate={{ opacity: 1, scale: 1, x: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    className="relative"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-200/30 to-pink-200/30 rounded-3xl blur-3xl" />
+                    <div className="relative card p-6 shadow-glow-xl">
+                      <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-gray-100/80 to-blue-100/80 border border-blue-200 flex items-center justify-center overflow-hidden">
+                        <img
+                          src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
+                          alt="Medical imaging AI analysis light"
+                          className="w-full h-full object-cover opacity-90"
+                        />
+                      </div>
+                      <div className="mt-4 flex items-center gap-3">
+                        <div className="flex-1 h-2 rounded-full bg-blue-200 overflow-hidden">
+                          <motion.div
+                            className="h-full bg-gradient-to-r from-blue-400 to-purple-400"
+                            initial={{ width: "0%" }}
+                            animate={{ width: "95%" }}
+                            transition={{ duration: 2, delay: 1 }}
+                          />
+                        </div>
+                        <span className="text-xs text-gray-600">95% Confidence</span>
+                      </div>
+                    </div>
+                  </motion.div>
+                </>
+              )}
             </div>
           </div>
         </section>
