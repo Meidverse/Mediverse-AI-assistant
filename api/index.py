@@ -3,6 +3,8 @@ from http.server import BaseHTTPRequestHandler
 import json
 import os
 import traceback
+from urllib.parse import parse_qs
+from io import BytesIO
 
 # Import Gemini AI
 try:
@@ -54,16 +56,53 @@ class handler(BaseHTTPRequestHandler):
             path = self.path.split('?')[0]
             
             if 'analyze' in path:
-                # Parse JSON request
-                try:
-                    request_data = json.loads(post_data.decode('utf-8'))
-                except json.JSONDecodeError:
-                    self.send_error_response(400, "Invalid JSON in request body")
-                    return
+                # Parse request data (support both JSON and FormData)
+                query = None
+                mode = 'quick'
                 
-                # Get query and mode from request
-                query = request_data.get('query', '')
-                mode = request_data.get('mode', 'quick')
+                content_type = self.headers.get('Content-Type', '')
+                
+                if 'application/json' in content_type:
+                    # Parse JSON request
+                    try:
+                        request_data = json.loads(post_data.decode('utf-8'))
+                        query = request_data.get('query', '')
+                        mode = request_data.get('mode', 'quick')
+                    except json.JSONDecodeError:
+                        self.send_error_response(400, "Invalid JSON in request body")
+                        return
+                        
+                elif 'multipart/form-data' in content_type:
+                    # Parse FormData - simple extraction for query and mode
+                    # For a full multipart parser, we'd need python-multipart library
+                    # For now, extract text fields using simple string parsing
+                    try:
+                        body_str = post_data.decode('utf-8', errors='ignore')
+                        
+                        # Extract query field
+                        if 'name="query"' in body_str:
+                            start = body_str.find('name="query"')
+                            start = body_str.find('\r\n\r\n', start) + 4
+                            end = body_str.find('\r\n--', start)
+                            if end == -1:
+                                end = body_str.find('--\r\n', start)
+                            query = body_str[start:end].strip()
+                        
+                        # Extract mode field
+                        if 'name="mode"' in body_str:
+                            start = body_str.find('name="mode"')
+                            start = body_str.find('\r\n\r\n', start) + 4
+                            end = body_str.find('\r\n--', start)
+                            if end == -1:
+                                end = body_str.find('--\r\n', start)
+                            mode = body_str[start:end].strip()
+                            
+                    except Exception as parse_error:
+                        self.send_error_response(400, f"Error parsing form data: {str(parse_error)}")
+                        return
+                else:
+                    self.send_error_response(400, "Unsupported Content-Type. Use application/json or multipart/form-data")
+                    return
                 
                 if not query:
                     self.send_error_response(400, "Missing 'query' field in request")
