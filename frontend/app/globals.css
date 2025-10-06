@@ -225,6 +225,14 @@ a:hover {
   letter-spacing: -0.02em;
 }
 
+/* Light theme section heading */
+.light .section-heading {
+  background: linear-gradient(135deg, #1f2937 0%, #4b5563 50%, #6b7280 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .section-subtitle {
   color: #cbd5e1;
   font-size: 1.125rem;
@@ -234,7 +242,7 @@ a:hover {
 
 /* Light theme section subtitle */
 .light .section-subtitle {
-  color: #64748b;
+  color: #4b5563;
   opacity: 1;
 }
 
@@ -432,25 +440,40 @@ textarea:focus-visible {
 /* Light theme overrides for hardcoded colors */
 .light {
   /* Text colors */
-  .text-white { color: #1f2937 !important; }
+  .text-white { color: #111827 !important; }
   .text-slate-100 { color: #1f2937 !important; }
   .text-slate-200 { color: #374151 !important; }
   .text-slate-300 { color: #4b5563 !important; }
+  .text-slate-300\/80 { color: rgba(75, 85, 99, 0.9) !important; }
+  .text-slate-300\/70 { color: rgba(75, 85, 99, 0.85) !important; }
   .text-slate-400 { color: #6b7280 !important; }
+  .text-slate-400\/80 { color: rgba(107, 114, 128, 0.9) !important; }
+  .text-blue-300 { color: #3b82f6 !important; }
+  .text-blue-200 { color: #60a5fa !important; }
+  .text-purple-200 { color: #a855f7 !important; }
   
   /* Background colors */
-  .bg-slate-900\/40 { background-color: rgba(255, 255, 255, 0.8) !important; }
+  .bg-slate-900\/40 { background-color: rgba(255, 255, 255, 0.85) !important; }
   .bg-slate-900\/60 { background-color: rgba(255, 255, 255, 0.9) !important; }
   .bg-slate-950\/40 { background-color: rgba(249, 250, 251, 0.9) !important; }
-  .bg-slate-800\/40 { background-color: rgba(255, 255, 255, 0.7) !important; }
-  .bg-slate-800\/60 { background-color: rgba(255, 255, 255, 0.8) !important; }
+  .bg-slate-800\/40 { background-color: rgba(255, 255, 255, 0.75) !important; }
+  .bg-slate-800\/60 { background-color: rgba(255, 255, 255, 0.85) !important; }
   .bg-slate-800\/80 { background-color: rgba(255, 255, 255, 0.9) !important; }
+  .bg-slate-800\/50 { background-color: rgba(255, 255, 255, 0.8) !important; }
+  .bg-white\/80 { background-color: rgba(255, 255, 255, 0.95) !important; }
+  .bg-white\/5 { background-color: rgba(243, 244, 246, 0.6) !important; }
+  .bg-blue-500\/20 { background-color: rgba(59, 130, 246, 0.15) !important; }
+  .bg-purple-500\/20 { background-color: rgba(168, 85, 247, 0.15) !important; }
   
   /* Border colors */
-  .border-white\/10 { border-color: rgba(209, 213, 219, 0.4) !important; }
+  .border-white\/10 { border-color: rgba(209, 213, 219, 0.5) !important; }
+  
+  /* Icon colors for better visibility */
+  .animate-pulse-glow { color: #2563eb !important; }
   
   /* Hover states */
   .hover\:bg-slate-800\/80:hover { background-color: rgba(243, 244, 246, 0.95) !important; }
   .hover\:bg-slate-700\/50:hover { background-color: rgba(243, 244, 246, 0.9) !important; }
   .hover\:bg-slate-700\/70:hover { background-color: rgba(243, 244, 246, 0.95) !important; }
+  .hover\:bg-gray-100:hover { background-color: rgba(243, 244, 246, 1) !important; }
 }

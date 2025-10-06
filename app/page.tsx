@@ -98,8 +98,8 @@ export default function HomePage() {
           >
             <div className="relative">
               <div className="absolute inset-0 bg-blue-500/30 blur-xl rounded-full" />
-              <span className="relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500/30 to-purple-500/20 shadow-glow-sm border border-white/10">
-                <SparklesIcon className="h-6 w-6 text-blue-300 animate-pulse-glow" />
+              <span className="relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-blue-500/30 to-purple-500/20 shadow-glow-sm border dark:border-white/10 light:border-blue-300/40">
+                <SparklesIcon className="h-6 w-6 dark:text-blue-300 light:text-blue-600 animate-pulse-glow" />
               </span>
             </div>
             <div>
@@ -146,26 +146,18 @@ export default function HomePage() {
                 transition={{ duration: 0.8 }}
               >
                 <motion.div
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs uppercase tracking-widest text-blue-200 shadow-glow-sm"
+                  className="inline-flex items-center gap-2 rounded-full border dark:border-white/10 light:border-blue-300 dark:bg-white/5 light:bg-blue-50 px-3 py-1 text-xs uppercase tracking-widest dark:text-blue-200 light:text-blue-700 shadow-glow-sm"
                   whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(59, 130, 246, 0.4)" }}
                 >
-                  <SparklesIcon className="h-4 w-4 text-blue-300" />
+                  <SparklesIcon className="h-4 w-4 dark:text-blue-300 light:text-blue-600" />
                   AI-Powered Medical Imaging
                 </motion.div>
 
-                <h1
-                  className="text-5xl font-bold leading-tight lg:text-6xl"
-                  style={{
-                    background: "linear-gradient(135deg, #ffffff 0%, #e0e7ff 40%, #c7d2fe 100%)",
-                    WebkitBackgroundClip: "text",
-                    backgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                  }}
-                >
+                <h1 className="text-5xl font-bold leading-tight lg:text-6xl dark:bg-gradient-to-r dark:from-white dark:via-blue-100 dark:to-purple-200 light:bg-gradient-to-r light:from-gray-900 light:via-blue-900 light:to-purple-900 bg-clip-text text-transparent">
                   Upload. Analyze. Diagnose.
                 </h1>
 
-                <p className="text-lg text-slate-300 leading-relaxed">
+                <p className="text-lg dark:text-slate-300 light:text-gray-600 leading-relaxed">
                   Harness the power of advanced AI to analyze X-rays, CT scans, and MRIs instantly. 
                   Get preliminary diagnostic insights in seconds with Mediverse&apos;s multimodal vision AI.
                 </p>
@@ -200,10 +192,10 @@ export default function HomePage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.5 + idx * 0.1 }}
                     >
-                      <p className="text-3xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
+                      <p className="text-3xl font-bold dark:bg-gradient-to-r dark:from-blue-200 dark:to-purple-200 light:bg-gradient-to-r light:from-blue-700 light:to-purple-700 bg-clip-text text-transparent">
                         {stat.value}
                       </p>
-                      <p className="text-xs text-slate-400 mt-1">{stat.label}</p>
+                      <p className="text-xs dark:text-slate-400 light:text-gray-600 mt-1">{stat.label}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -226,7 +218,7 @@ export default function HomePage() {
                     />
                   </div>
                   <div className="mt-4 flex items-center gap-3">
-                    <div className="flex-1 h-2 rounded-full bg-slate-800/60 overflow-hidden">
+                    <div className="flex-1 h-2 rounded-full dark:bg-slate-800/60 light:bg-gray-200 overflow-hidden">
                       <motion.div
                         className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
                         initial={{ width: "0%" }}
@@ -234,7 +226,7 @@ export default function HomePage() {
                         transition={{ duration: 2, delay: 1 }}
                       />
                     </div>
-                    <span className="text-xs text-slate-400">95% Confidence</span>
+                    <span className="text-xs dark:text-slate-400 light:text-gray-600">95% Confidence</span>
                   </div>
                 </div>
               </motion.div>
@@ -243,7 +235,7 @@ export default function HomePage() {
         </section>
 
         {/* Capabilities Section */}
-        <section id="features" className="section border-y border-white/10 bg-slate-950/40">
+        <section id="features" className="section border-y dark:border-white/10 light:border-gray-200 dark:bg-slate-950/40 light:bg-white/60">
           <div className="mx-auto max-w-7xl px-6">
             <motion.div
               className="text-center mb-16"
@@ -273,12 +265,12 @@ export default function HomePage() {
                     whileHover={{ rotate: 360, scale: 1.1 }}
                     transition={{ duration: 0.6 }}
                   >
-                    <div className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10">
-                      <capability.icon className="h-8 w-8 text-blue-300" />
+                    <div className="inline-flex p-4 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 border dark:border-white/10 light:border-blue-300/30">
+                      <capability.icon className="h-8 w-8 dark:text-blue-300 light:text-blue-600" />
                     </div>
                   </motion.div>
-                  <h3 className="text-xl font-semibold text-white mb-3">{capability.title}</h3>
-                  <p className="text-sm text-slate-300/80 leading-relaxed">{capability.description}</p>
+                  <h3 className="text-xl font-semibold dark:text-white light:text-gray-900 mb-3">{capability.title}</h3>
+                  <p className="text-sm dark:text-slate-300/80 light:text-gray-600 leading-relaxed">{capability.description}</p>
                 </motion.div>
               ))}
             </div>
@@ -298,12 +290,12 @@ export default function HomePage() {
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1 }}
                 >
-                  <div className="flex-shrink-0 p-3 rounded-xl bg-blue-500/10 border border-blue-400/20">
-                    <feature.icon className="h-6 w-6 text-blue-300" />
+                  <div className="flex-shrink-0 p-3 rounded-xl bg-blue-500/10 border dark:border-blue-400/20 light:border-blue-300/40">
+                    <feature.icon className="h-6 w-6 dark:text-blue-300 light:text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-white mb-1">{feature.title}</h3>
-                    <p className="text-sm text-slate-400">{feature.description}</p>
+                    <h3 className="font-semibold dark:text-white light:text-gray-900 mb-1">{feature.title}</h3>
+                    <p className="text-sm dark:text-slate-400 light:text-gray-600">{feature.description}</p>
                   </div>
                 </motion.div>
               ))}
@@ -378,13 +370,13 @@ export default function HomePage() {
                   transition={{ delay: idx * 0.2 }}
                 >
                   <div className="card p-8 text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border border-white/10 mb-6">
-                      <span className="text-2xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 border dark:border-white/10 light:border-blue-300/40 mb-6">
+                      <span className="text-2xl font-bold dark:bg-gradient-to-r dark:from-blue-200 dark:to-purple-200 light:bg-gradient-to-r light:from-blue-700 light:to-purple-700 bg-clip-text text-transparent">
                         {item.step}
                       </span>
                     </div>
-                    <h3 className="text-xl font-semibold text-white mb-3">{item.title}</h3>
-                    <p className="text-sm text-slate-300/70">{item.desc}</p>
+                    <h3 className="text-xl font-semibold dark:text-white light:text-gray-900 mb-3">{item.title}</h3>
+                    <p className="text-sm dark:text-slate-300/70 light:text-gray-600">{item.desc}</p>
                   </div>
                   {idx < 2 && (
                     <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-blue-400/50 to-transparent" />
