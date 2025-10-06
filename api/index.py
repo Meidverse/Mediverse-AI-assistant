@@ -5,6 +5,12 @@ import os
 import traceback
 from urllib.parse import parse_qs
 from io import BytesIO
+import warnings
+
+# Suppress gRPC ALTS warnings
+os.environ['GRPC_VERBOSITY'] = 'ERROR'
+os.environ['GLOG_minloglevel'] = '2'
+warnings.filterwarnings('ignore', category=UserWarning, module='google.auth')
 
 # Import Gemini AI
 try:
@@ -171,6 +177,11 @@ class handler(BaseHTTPRequestHandler):
     def generate_medical_response(self, query: str, mode: str, api_key: str):
         """Generate medical response using Gemini AI."""
         try:
+            # Suppress any additional gRPC/ALTS warnings
+            import logging
+            logging.getLogger('google.auth').setLevel(logging.ERROR)
+            logging.getLogger('google.api_core').setLevel(logging.ERROR)
+            
             # Configure Gemini
             genai.configure(api_key=api_key)
             model = genai.GenerativeModel('gemini-2.0-flash-exp')
