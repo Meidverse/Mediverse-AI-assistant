@@ -3,9 +3,25 @@
 import { MoonIcon, SunIcon } from '@heroicons/react/24/outline';
 import { motion } from 'framer-motion';
 import { useTheme } from './ThemeProvider';
+import { useState, useEffect } from 'react';
 
 export function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch by only rendering after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    // Return a placeholder during SSR with same dimensions
+    return (
+      <div className="relative p-2 rounded-lg border border-white/10 dark:bg-slate-800/50 light:bg-white/80">
+        <div className="h-5 w-5" />
+      </div>
+    );
+  }
 
   return (
     <motion.button
