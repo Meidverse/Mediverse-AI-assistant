@@ -199,12 +199,18 @@ class handler(BaseHTTPRequestHandler):
                 generation_config=generation_config
             )
             
-            # Create appropriate prompt based on mode
-            system_prompt = self.get_system_prompt(mode)
-            full_prompt = f"{system_prompt}\n\nUser Query: {query}"
+            # Let Gemini work naturally without heavy prompting
+            # Commented out custom prompts - using natural AI behavior
+            # system_prompt = self.get_system_prompt(mode)
+            # full_prompt = f"{system_prompt}\n\nUser Query: {query}"
+            
+            # Simple medical context prompt
+            simple_prompt = f"""You are a medical AI assistant. Answer the following medical question clearly and helpfully:
+
+{query}"""
             
             # Generate response with timeout handling
-            response = model.generate_content(full_prompt)
+            response = model.generate_content(simple_prompt)
             
             return {
                 "response": response.text,
