@@ -184,13 +184,26 @@ class handler(BaseHTTPRequestHandler):
             
             # Configure Gemini
             genai.configure(api_key=api_key)
-            model = genai.GenerativeModel('gemini-2.0-flash-exp')
+            
+            # Configure generation settings for better, complete responses
+            generation_config = {
+                "temperature": 0.7,
+                "top_p": 0.95,
+                "top_k": 40,
+                "max_output_tokens": 8192,  # Allow longer responses
+                "response_mime_type": "text/plain",
+            }
+            
+            model = genai.GenerativeModel(
+                'gemini-2.0-flash-exp',
+                generation_config=generation_config
+            )
             
             # Create appropriate prompt based on mode
             system_prompt = self.get_system_prompt(mode)
             full_prompt = f"{system_prompt}\n\nUser Query: {query}"
             
-            # Generate response
+            # Generate response with timeout handling
             response = model.generate_content(full_prompt)
             
             return {
@@ -217,8 +230,9 @@ class handler(BaseHTTPRequestHandler):
 - Answer ANY medical, health, or wellness question the user asks
 - Provide evidence-based information in a clear, friendly manner
 - If the query is casual (like "hello", "hi", "test"), respond warmly and invite them to ask a medical question
-- For medication questions (like "what is combiflam", "what is paracetamol"), immediately provide helpful information about uses, dosage, side effects, etc.
+- For medication questions, provide comprehensive information about uses, dosage, side effects, precautions, etc.
 - Never refuse to answer or say "please provide a medical question" - just answer what they asked!
+- Take your time to provide COMPLETE, thorough answers - don't rush or cut off mid-sentence
 
 **Guidelines:**
 1. Always prioritize patient safety and accuracy
@@ -227,18 +241,64 @@ class handler(BaseHTTPRequestHandler):
 4. Use clear, accessible language while maintaining medical accuracy
 5. Include relevant disclaimers for serious conditions
 6. Be helpful and responsive - answer ALL questions directly
+7. Provide COMPLETE information - finish your thoughts and explanations fully
 
-**Important:** If someone asks about a medication, condition, symptom, or treatment - ANSWER IT directly. Don't ask them to rephrase or provide more context unless absolutely necessary.
+**Important:** Give complete, well-structured answers. Don't truncate or rush. The user values thorough, helpful information.
 """
         
         mode_prompts = {
-            "quick": base_prompt + "\n\nProvide a concise, helpful answer to the question. Keep response under 200 words. If they're asking about a medication or condition, give them the key information they need.",
+            "quick": base_prompt + """
+
+**Quick Consult Mode:**
+Provide a concise but COMPLETE answer covering:
+- What it is / definition
+- Main uses or symptoms
+- Key information the user needs
+- Important precautions or when to see a doctor
+
+Be concise but thorough - finish all important points.""",
             
-            "image": base_prompt + "\n\nAnalyze the medical image or scan description provided. Identify key findings, potential diagnoses, and recommend next steps. Be thorough but accessible.",
+            "image": base_prompt + """
+
+**Image Analysis Mode:**
+Analyze the medical image or scan description provided. Provide a comprehensive analysis including:
+- Key findings and observations
+- Potential diagnoses or differential diagnoses
+- Recommended next steps or further tests
+- When to seek immediate medical attention
+- Limitations of AI analysis
+
+Be thorough and complete in your assessment.""",
             
-            "deep_search": base_prompt + "\n\nProvide a comprehensive, research-backed analysis. Include:\n- Detailed explanation\n- Current medical research and guidelines\n- Treatment options\n- Prevention strategies\n- When to seek immediate care",
+            "deep_search": base_prompt + """
+
+**Deep Search Mode:**
+Provide a comprehensive, research-backed analysis with COMPLETE information on:
+- Detailed explanation of the condition/topic
+- Pathophysiology (if relevant)
+- Current medical research and clinical guidelines
+- Evidence-based treatment options
+- Prevention strategies and lifestyle modifications
+- When to seek immediate medical care
+- Prognosis and long-term outlook
+- Common misconceptions
+
+Take your time to provide thorough, well-researched information.""",
             
-            "expert": base_prompt + "\n\nProvide an expert-level medical analysis with:\n- Differential diagnoses\n- Evidence-based treatment protocols\n- Latest clinical guidelines\n- Risk stratification\n- Recommended investigations\n- Clinical pearls and considerations"
+            "expert": base_prompt + """
+
+**Expert Mode:**
+Provide an expert-level medical analysis with COMPLETE, detailed information:
+- Comprehensive differential diagnoses with reasoning
+- Evidence-based treatment protocols and algorithms
+- Latest clinical guidelines and recommendations
+- Risk stratification and prognostic factors
+- Recommended investigations and diagnostic workup
+- Clinical pearls and nuanced considerations
+- Management of complications
+- Special populations considerations
+
+Provide thorough, expert-level detail - this is for in-depth medical knowledge."""
         }
         
         return mode_prompts.get(mode, mode_prompts["quick"])
