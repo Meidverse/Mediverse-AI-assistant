@@ -9,22 +9,25 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
         
-        # Parse the path - Vercel strips /api prefix, so /api/health becomes /health
-        path = self.path.rstrip('/')  # Remove trailing slash
+        # Debug: show the exact path received
+        path = self.path
+        path_stripped = path.rstrip('/')
         
         # Route based on path
-        if path == '/health' or path == '':
-            # /api/health (becomes /health) or /api (becomes /)
+        if 'health' in path:
             response = {
                 "status": "healthy",
                 "message": "Mediverse API is running",
-                "version": "v6"
+                "version": "v7-debug",
+                "received_path": path,
+                "path_stripped": path_stripped
             }
         else:
             response = {
-                "message": "Mediverse API v6 - Python Handler",
+                "message": "Mediverse API v7 - Debug Mode",
                 "status": "online",
-                "path": path,
+                "received_path": path,
+                "path_stripped": path_stripped,
                 "endpoints": {
                     "GET /api": "API info",
                     "GET /api/health": "Health check",
