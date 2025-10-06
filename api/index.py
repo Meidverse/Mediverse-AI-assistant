@@ -9,21 +9,27 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
         
-        # Parse the path
-        path = self.path
+        # Parse the path - Vercel strips /api prefix, so /api/health becomes /health
+        path = self.path.rstrip('/')  # Remove trailing slash
         
         # Route based on path
-        if path == '/health' or path == '/api/health':
+        if path == '/health' or path == '':
+            # /api/health (becomes /health) or /api (becomes /)
             response = {
                 "status": "healthy",
-                "message": "Mediverse API is running"
+                "message": "Mediverse API is running",
+                "version": "v6"
             }
         else:
             response = {
-                "message": "Mediverse API v5 - Python Handler Working!",
+                "message": "Mediverse API v6 - Python Handler",
                 "status": "online",
                 "path": path,
-                "note": "Use /health for health check, POST to /analyze for medical AI"
+                "endpoints": {
+                    "GET /api": "API info",
+                    "GET /api/health": "Health check",
+                    "POST /api/v1/analyze": "Medical AI analysis"
+                }
             }
         
         self.wfile.write(json.dumps(response).encode())
@@ -41,19 +47,22 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
         
-        path = self.path
+        # Vercel strips /api, so /api/v1/analyze becomes /v1/analyze
+        path = self.path.rstrip('/')
         
-        if path == '/analyze' or path == '/api/v1/analyze' or path == '/v1/analyze':
+        if '/analyze' in path or path == '/analyze':
             # For now, return a placeholder response
             response = {
                 "message": "POST endpoint working! Add GEMINI_API_KEY to Vercel env vars for AI responses.",
                 "status": "success",
+                "received_path": path,
                 "note": "Medical AI functionality requires GEMINI_API_KEY environment variable"
             }
         else:
             response = {
                 "error": "Unknown endpoint",
-                "path": path
+                "path": path,
+                "hint": "Use POST /api/v1/analyze for medical AI"
             }
         
         self.wfile.write(json.dumps(response).encode())
