@@ -9,25 +9,20 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
         
-        # Debug: show the exact path received
-        path = self.path
-        path_stripped = path.rstrip('/')
+        # Route based on path (vercel rewrites send query params)
+        path = self.path.split('?')[0]  # Remove query params
         
-        # Route based on path
         if 'health' in path:
             response = {
                 "status": "healthy",
                 "message": "Mediverse API is running",
-                "version": "v7-debug",
-                "received_path": path,
-                "path_stripped": path_stripped
+                "service": "Medical AI Assistant"
             }
         else:
             response = {
-                "message": "Mediverse API v7 - Debug Mode",
+                "message": "Mediverse Medical AI API",
                 "status": "online",
-                "received_path": path,
-                "path_stripped": path_stripped,
+                "version": "1.0",
                 "endpoints": {
                     "GET /api": "API info",
                     "GET /api/health": "Health check",
@@ -50,22 +45,26 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.end_headers()
         
-        # Vercel strips /api, so /api/v1/analyze becomes /v1/analyze
-        path = self.path.rstrip('/')
+        # Parse path (remove query params)
+        path = self.path.split('?')[0]
         
-        if '/analyze' in path or path == '/analyze':
-            # For now, return a placeholder response
+        if 'analyze' in path:
+            # Placeholder response - GEMINI_API_KEY needed for actual AI
             response = {
-                "message": "POST endpoint working! Add GEMINI_API_KEY to Vercel env vars for AI responses.",
+                "message": "Analysis endpoint ready! Add GEMINI_API_KEY to Vercel environment variables for AI responses.",
                 "status": "success",
-                "received_path": path,
-                "note": "Medical AI functionality requires GEMINI_API_KEY environment variable"
+                "note": "Medical AI functionality requires GEMINI_API_KEY environment variable",
+                "next_steps": [
+                    "Go to Vercel Dashboard → mediverseai project → Settings → Environment Variables",
+                    "Add GEMINI_API_KEY with your API key from https://aistudio.google.com/apikey",
+                    "Redeploy to activate AI responses"
+                ]
             }
         else:
             response = {
                 "error": "Unknown endpoint",
                 "path": path,
-                "hint": "Use POST /api/v1/analyze for medical AI"
+                "hint": "Use POST /api/v1/analyze for medical AI analysis"
             }
         
         self.wfile.write(json.dumps(response).encode())
