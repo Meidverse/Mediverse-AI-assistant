@@ -12,6 +12,14 @@
     --glow-primary: rgba(59, 130, 246, 0.6);
     --glow-secondary: rgba(139, 92, 246, 0.5);
   }
+
+  /* Light theme variables */
+  .light {
+    --color-background: 0 0% 100%;
+    --color-surface: 0 0% 98%;
+    --glow-primary: rgba(59, 130, 246, 0.3);
+    --glow-secondary: rgba(139, 92, 246, 0.25);
+  }
 }
 
 html {
@@ -24,16 +32,16 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
   position: relative;
-  background: #020617;
-  color: #f8fafc;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+/* Dark theme background */
+html.dark body {
+  background: #020617;
+  color: #f8fafc;
   background: radial-gradient(ellipse at top left, rgba(59, 130, 246, 0.12), transparent 50%),
               radial-gradient(ellipse at bottom right, rgba(139, 92, 246, 0.15), transparent 50%),
               radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.04), transparent 70%),
@@ -41,8 +49,22 @@ body {
   background-attachment: fixed;
 }
 
-/* Animated background grid */
-body::before {
+/* Light theme background */
+html.light body {
+  background: #f9fafb;
+  color: #111827;
+  background: radial-gradient(ellipse at top left, rgba(59, 130, 246, 0.06), transparent 50%),
+              radial-gradient(ellipse at bottom right, rgba(139, 92, 246, 0.08), transparent 50%),
+              #f9fafb;
+  background-attachment: fixed;
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif;
+}
+
+/* Animated background grid - dark theme */
+html.dark body::before {
   content: "";
   position: fixed;
   top: 0;
@@ -56,6 +78,24 @@ body::before {
   pointer-events: none;
   z-index: 0;
   opacity: 0.4;
+  animation: grid-flow 20s linear infinite;
+}
+
+/* Animated background grid - light theme */
+html.light body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(59, 130, 246, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.02) 1px, transparent 1px);
+  background-size: 80px 80px;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.3;
   animation: grid-flow 20s linear infinite;
 }
 

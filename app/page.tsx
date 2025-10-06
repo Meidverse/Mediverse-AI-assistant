@@ -1,6 +1,8 @@
 "use client";
 
 import { ChatInterface } from "@/components/ChatInterface";
+import { Footer } from "@/components/Footer";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import {
     ClockIcon,
     CpuChipIcon,
@@ -62,7 +64,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100">
+    <div className="min-h-screen dark:bg-slate-950 light:bg-gray-50 dark:text-slate-100 light:text-gray-900 transition-colors">
       {/* Background effects */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <motion.div
@@ -85,7 +87,7 @@ export default function HomePage() {
 
       {/* Header */}
       <motion.header
-        className="sticky top-0 z-40 border-b border-white/10 backdrop-blur-2xl bg-slate-950/60"
+        className="sticky top-0 z-40 border-b dark:border-white/10 light:border-gray-200 backdrop-blur-2xl dark:bg-slate-950/60 light:bg-white/80"
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6 }}
@@ -103,30 +105,33 @@ export default function HomePage() {
             </div>
             <div>
               <p className="text-lg font-semibold">Mediverse AI</p>
-              <p className="text-xs text-slate-400">Medical Imaging Diagnostics</p>
+              <p className="text-xs dark:text-slate-400 light:text-gray-600">Medical Imaging Diagnostics</p>
             </div>
           </motion.div>
 
-          <nav className="hidden items-center gap-6 text-sm font-medium text-slate-200 md:flex">
-            <a href="#features" className="transition-smooth hover:text-white hover:scale-105">
+          <nav className="hidden items-center gap-6 text-sm font-medium dark:text-slate-200 light:text-gray-700 md:flex">
+            <a href="#features" className="transition-smooth dark:hover:text-white light:hover:text-gray-900 hover:scale-105">
               Features
             </a>
-            <a href="#demo" className="transition-smooth hover:text-white hover:scale-105">
+            <a href="#demo" className="transition-smooth dark:hover:text-white light:hover:text-gray-900 hover:scale-105">
               Try Demo
             </a>
-            <a href="#how-it-works" className="transition-smooth hover:text-white hover:scale-105">
+            <a href="#how-it-works" className="transition-smooth dark:hover:text-white light:hover:text-gray-900 hover:scale-105">
               How It Works
             </a>
           </nav>
 
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={scrollToDemo}
-            className="primary"
-          >
-            Get Started
-          </motion.button>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={scrollToDemo}
+              className="primary"
+            >
+              Get Started
+            </motion.button>
+          </div>
         </div>
       </motion.header>
 
@@ -392,23 +397,8 @@ export default function HomePage() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-white/10 bg-slate-950/80 py-10">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div>
-              <p className="text-lg font-semibold text-white">Mediverse AI</p>
-              <p className="text-sm text-slate-400/80 mt-1">Advancing medical diagnostics with AI</p>
-            </div>
-            <div className="flex gap-6 text-sm text-slate-400">
-              <Link href="#" className="hover:text-white transition">Privacy</Link>
-              <Link href="#" className="hover:text-white transition">Terms</Link>
-              <Link href="#" className="hover:text-white transition">Contact</Link>
-            </div>
-            <p className="text-xs text-slate-500" suppressHydrationWarning>© {new Date().getFullYear()} Mediverse. All rights reserved.</p>
-          </div>
-        </div>
-      </footer>
+      {/* Comprehensive Footer */}
+      <Footer />
     </div>
   );
 }

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Mediverse API FormData</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #eee;
+        }
+        h1 { color: #4a90e2; }
+        .test-section {
+            background: #2a2a3e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #4a90e2;
+        }
+        button {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover { background: #357abd; }
+        pre {
+            background: #1a1a2e;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #333;
+        }
+        .success { color: #4ade80; }
+        .error { color: #f87171; }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background: #1a1a2e;
+            border: 1px solid #4a90e2;
+            color: #eee;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Mediverse API FormData Test</h1>
+    
+    <div class="test-section">
+        <h2>Test FormData POST to /api/v1/analyze</h2>
+        
+        <label>Query:</label>
+        <input type="text" id="query" value="What is paracetamol used for?" />
+        
+        <label>Mode:</label>
+        <select id="mode">
+            <option value="quick">Quick Consult</option>
+            <option value="image">Image Analysis</option>
+            <option value="deep_search">Deep Search</option>
+            <option value="expert">Expert Mode</option>
+        </select>
+        
+        <button onclick="testFormData()">Test FormData (Like Frontend)</button>
+        <button onclick="testJSON()">Test JSON (Direct)</button>
+        <button onclick="clearResults()">Clear Results</button>
+        
+        <h3>Response:</h3>
+        <pre id="response">Click a button to test...</pre>
+    </div>
+
+    <script>
+        const API_URL = 'https://mediverseai.vercel.app/api/v1/analyze';
+        
+        async function testFormData() {
+            const query = document.getElementById('query').value;
+            const mode = document.getElementById('mode').value;
+            const responseEl = document.getElementById('response');
+            
+            responseEl.textContent = 'Sending FormData request...\n';
+            
+            try {
+                const formData = new FormData();
+                formData.append('query', query);
+                formData.append('mode', mode);
+                
+                responseEl.textContent += `Query: ${query}\nMode: ${mode}\n\nSending...\n`;
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: formData,
+                });
+                
+                responseEl.textContent += `Status: ${response.status} ${response.statusText}\n\n`;
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseEl.innerHTML = `<span class="success">✅ Success!</span>\n\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    responseEl.innerHTML = `<span class="error">❌ Error ${response.status}</span>\n\n${JSON.stringify(data, null, 2)}`;
+                }
+                
+            } catch (error) {
+                responseEl.innerHTML = `<span class="error">❌ Network Error</span>\n\n${error.message}`;
+            }
+        }
+        
+        async function testJSON() {
+            const query = document.getElementById('query').value;
+            const mode = document.getElementById('mode').value;
+            const responseEl = document.getElementById('response');
+            
+            responseEl.textContent = 'Sending JSON request...\n';
+            
+            try {
+                responseEl.textContent += `Query: ${query}\nMode: ${mode}\n\nSending...\n`;
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ query, mode }),
+                });
+                
+                responseEl.textContent += `Status: ${response.status} ${response.statusText}\n\n`;
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseEl.innerHTML = `<span class="success">✅ Success!</span>\n\n${JSON.stringify(data, null, 2)}`;
+                } else {
+                    responseEl.innerHTML = `<span class="error">❌ Error ${response.status}</span>\n\n${JSON.stringify(data, null, 2)}`;
+                }
+                
+            } catch (error) {
+                responseEl.innerHTML = `<span class="error">❌ Network Error</span>\n\n${error.message}`;
+            }
+        }
+        
+        function clearResults() {
+            document.getElementById('response').textContent = 'Click a button to test...';
+        }
+    </script>
+</body>
+</html>
