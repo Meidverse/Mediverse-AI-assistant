@@ -65,16 +65,16 @@ async def root():
         "services": services_available
     }
 
-# Health endpoint
-@app.get("/api/health")
+# Health endpoint (Vercel routes /api/health -> / + health)
+@app.get("/health")
 async def health():
     return {
         "status": "healthy",
         "services": services_available
     }
 
-# Main analyze endpoint
-@app.post("/api/v1/analyze")
+# Main analyze endpoint (Vercel routes /api/v1/analyze -> / + v1/analyze)
+@app.post("/v1/analyze")
 async def analyze(
     query: str = Form(...),
     mode: str = Form("quick"),
