@@ -73,29 +73,52 @@ class handler(BaseHTTPRequestHandler):
                         return
                         
                 elif 'multipart/form-data' in content_type:
-                    # Parse FormData - simple extraction for query and mode
-                    # For a full multipart parser, we'd need python-multipart library
-                    # For now, extract text fields using simple string parsing
+                    # Parse FormData - extract boundary and fields
                     try:
+                        # Extract boundary from Content-Type header
+                        boundary = None
+                        for part in content_type.split(';'):
+                            if 'boundary=' in part:
+                                boundary = part.split('boundary=')[1].strip()
+                                break
+                        
+                        if not boundary:
+                            self.send_error_response(400, "Missing boundary in multipart/form-data")
+                            return
+                        
                         body_str = post_data.decode('utf-8', errors='ignore')
                         
-                        # Extract query field
-                        if 'name="query"' in body_str:
-                            start = body_str.find('name="query"')
-                            start = body_str.find('\r\n\r\n', start) + 4
-                            end = body_str.find('\r\n--', start)
-                            if end == -1:
-                                end = body_str.find('--\r\n', start)
-                            query = body_str[start:end].strip()
+                        # Split by boundary
+                        parts = body_str.split('--' + boundary)
                         
-                        # Extract mode field
-                        if 'name="mode"' in body_str:
-                            start = body_str.find('name="mode"')
-                            start = body_str.find('\r\n\r\n', start) + 4
-                            end = body_str.find('\r\n--', start)
-                            if end == -1:
-                                end = body_str.find('--\r\n', start)
-                            mode = body_str[start:end].strip()
+                        for part in parts:
+                            if 'name="query"' in part:
+                                # Extract query value
+                                lines = part.split('\r\n')
+                                for i, line in enumerate(lines):
+                                    if line == '' and i + 1 < len(lines):
+                                        # Next line after empty line is the value
+                                        query = lines[i + 1].strip()
+                                        break
+                            
+                            if 'name="mode"' in part:
+                                # Extract mode value
+                                lines = part.split('\r\n')
+                                for i, line in enumerate(lines):
+                                    if line == '' and i + 1 < len(lines):
+                                        mode = lines[i + 1].strip()
+                                        break
+                        
+                        # Fallback to old parsing if new method didn't work
+                        if not query:
+                            if 'name="query"' in body_str:
+                                start = body_str.find('name="query"')
+                                start = body_str.find('\r\n\r\n', start) + 4
+                                end = body_str.find('\r\n--', start)
+                                if end == -1:
+                                    end = body_str.find('--\r\n', start)
+                                if end > start:
+                                    query = body_str[start:end].strip()
                             
                     except Exception as parse_error:
                         self.send_error_response(400, f"Error parsing form data: {str(parse_error)}")
@@ -105,7 +128,15 @@ class handler(BaseHTTPRequestHandler):
                     return
                 
                 if not query:
-                    self.send_error_response(400, "Missing 'query' field in request")
+                    # Provide detailed error for debugging
+                    error_details = {
+                        "message": "Missing 'query' field in request",
+                        "content_type": content_type,
+                        "parsed_query": query,
+                        "parsed_mode": mode,
+                        "hint": "Ensure FormData includes 'query' field"
+                    }
+                    self.send_error_response(400, "Missing 'query' field in request", error_details)
                     return
                 
                 # Check if Gemini API key is configured
