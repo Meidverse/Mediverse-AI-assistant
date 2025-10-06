@@ -73,22 +73,25 @@ export function ChatInterface() {
   const handleSend = async () => {
     if (!input.trim() && !uploadedImage) return;
 
+    // Store input value before clearing
+    const queryText = input.trim();
+
     const userMessage: Message = {
       id: Date.now().toString(),
       role: "user",
-      content: input,
+      content: queryText,
       image: uploadedImage?.preview,
       timestamp: new Date(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setInput("");
+    setInput("");  // Clear input field
     setIsLoading(true);
 
     try {
       // Always use FormData for the /analyze endpoint
       const formData = new FormData();
-      formData.append("query", input);
+      formData.append("query", queryText);  // Use stored value
       formData.append("mode", selectedMode);
       
       if (uploadedImage) {
