@@ -1,9 +1,10 @@
 """
 Minimal Vercel Serverless API for testing
 """
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
+import json
 
 app = FastAPI(title="Mediverse API Test")
 
@@ -21,6 +22,13 @@ def root():
 
 @app.get("/health")
 def health():
-    return {"status": "healthy"}
+    return {"status": "healthy", "test": "working"}
 
+# Mangum handler for AWS Lambda / Vercel
 handler = Mangum(app, lifespan="off")
+
+# WSGI compatibility for Vercel
+def application(environ, start_response):
+    """WSGI application wrapper"""
+    return handler(environ, start_response)
+
