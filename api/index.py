@@ -1,34 +1,27 @@
-"""
-Minimal Vercel Serverless API for testing
-"""
-from fastapi import FastAPI, Response
-from fastapi.middleware.cors import CORSMiddleware
-from mangum import Mangum
+# Simple Vercel Python function without FastAPI
+from http.server import BaseHTTPRequestHandler
 import json
 
-app = FastAPI(title="Mediverse API Test")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-@app.get("/")
-def root():
-    return {"message": "Mediverse API v3 - Minimal Test", "status": "online"}
-
-@app.get("/health")
-def health():
-    return {"status": "healthy", "test": "working"}
-
-# Mangum handler for AWS Lambda / Vercel
-handler = Mangum(app, lifespan="off")
-
-# WSGI compatibility for Vercel
-def application(environ, start_response):
-    """WSGI application wrapper"""
-    return handler(environ, start_response)
-
+class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.end_headers()
+        
+        response = {
+            "message": "Mediverse API v4 - Simple Python Handler",
+            "status": "online",
+            "path": self.path
+        }
+        
+        self.wfile.write(json.dumps(response).encode())
+        return
+    
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', '*')
+        self.end_headers()
+        return
