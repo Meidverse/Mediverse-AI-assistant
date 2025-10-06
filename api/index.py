@@ -98,34 +98,32 @@ class handler(BaseHTTPRequestHandler):
                         parts = body_str.split('--' + boundary)
                         
                         for part in parts:
-                            if 'name="query"' in part:
-                                # Extract query value
-                                lines = part.split('\r\n')
-                                for i, line in enumerate(lines):
-                                    if line == '' and i + 1 < len(lines):
-                                        # Next line after empty line is the value
-                                        query = lines[i + 1].strip()
-                                        break
-                            
-                            if 'name="mode"' in part:
-                                # Extract mode value
-                                lines = part.split('\r\n')
-                                for i, line in enumerate(lines):
-                                    if line == '' and i + 1 < len(lines):
-                                        mode = lines[i + 1].strip()
-                                        break
+                            # Skip empty parts
+                            if not part.strip() or part.strip() == '--':
+                                continue
+                                
+                            # Extract field name and value
+                            if 'Content-Disposition' in part:
+                                # Get the field name
+                                field_name = None
+                                if 'name="query"' in part:
+                                    field_name = 'query'
+                                elif 'name="mode"' in part:
+                                    field_name = 'mode'
+                                
+                                if field_name:
+                                    # Find the value after the headers (after \r\n\r\n)
+                                    header_end = part.find('\r\n\r\n')
+                                    if header_end != -1:
+                                        value_start = header_end + 4
+                                        # Value ends at the end of this part (may have trailing \r\n)
+                                        value = part[value_start:].strip()
+                                        
+                                        if field_name == 'query':
+                                            query = value
+                                        elif field_name == 'mode':
+                                            mode = value
                         
-                        # Fallback to old parsing if new method didn't work
-                        if not query:
-                            if 'name="query"' in body_str:
-                                start = body_str.find('name="query"')
-                                start = body_str.find('\r\n\r\n', start) + 4
-                                end = body_str.find('\r\n--', start)
-                                if end == -1:
-                                    end = body_str.find('--\r\n', start)
-                                if end > start:
-                                    query = body_str[start:end].strip()
-                            
                     except Exception as parse_error:
                         self.send_error_response(400, f"Error parsing form data: {str(parse_error)}")
                         return
