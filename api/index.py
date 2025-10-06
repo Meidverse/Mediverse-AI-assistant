@@ -204,11 +204,12 @@ class handler(BaseHTTPRequestHandler):
             # system_prompt = self.get_system_prompt(mode)
             # full_prompt = f"{system_prompt}\n\nUser Query: {query}"
             
-            # Just pass the query directly - let Gemini be natural
-            # No prompt engineering - pure AI response
+            # Minimal context to guide Gemini as medical assistant
+            # Without this, it answers everything as technical/HTTP questions
+            prompt = f"Medical question: {query}"
             
             # Generate response with timeout handling
-            response = model.generate_content(query)
+            response = model.generate_content(prompt)
             
             return {
                 "response": response.text,
