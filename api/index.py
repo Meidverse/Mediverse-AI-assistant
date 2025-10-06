@@ -202,9 +202,14 @@ class handler(BaseHTTPRequestHandler):
             # system_prompt = self.get_system_prompt(mode)
             # full_prompt = f"{system_prompt}\n\nUser Query: {query}"
             
-            # Minimal context to guide Gemini as medical assistant
-            # Without this, it answers everything as technical/HTTP questions
-            prompt = f"Medical question: {query}"
+            # Act as a medical professional - provide comprehensive medical responses
+            prompt = f"""You are a knowledgeable medical professional AI assistant. 
+
+Respond to the following query with accurate, helpful medical information:
+
+{query}
+
+Provide a clear, comprehensive answer as a medical professional would."""
             
             # Generate response with timeout handling
             response = model.generate_content(prompt)
